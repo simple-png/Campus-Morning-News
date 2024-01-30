@@ -1,0 +1,5 @@
+com\heima\search\service\ArticleSearchService.class
+com\heima\search\service\Impl\ArticleSearchServiceImpl.class
+com\heima\search\controller\v1\ArticleSearchController.class
+com\heima\search\config\ElasticSearchConfig.class
+com\heima\search\SearchApplication.class

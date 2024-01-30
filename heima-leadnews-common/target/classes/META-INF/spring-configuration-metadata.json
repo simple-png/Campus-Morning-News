@@ -1,0 +1,22 @@
+{
+  "groups": [
+    {
+      "name": "aliyun",
+      "type": "com.heima.common.aliyun.TextAutoRoute",
+      "sourceType": "com.heima.common.aliyun.TextAutoRoute"
+    }
+  ],
+  "properties": [
+    {
+      "name": "aliyun.access-key-id",
+      "type": "java.lang.String",
+      "sourceType": "com.heima.common.aliyun.TextAutoRoute"
+    },
+    {
+      "name": "aliyun.secret",
+      "type": "java.lang.String",
+      "sourceType": "com.heima.common.aliyun.TextAutoRoute"
+    }
+  ],
+  "hints": []
+}

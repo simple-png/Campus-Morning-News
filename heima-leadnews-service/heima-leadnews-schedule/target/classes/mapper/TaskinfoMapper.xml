@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heima.schedule.mapper.TaskinfoMapper">
+
+    <select id="queryFutureTime" resultType="com.heima.model.schedule.pojos.Taskinfo">
+        select *
+        from taskinfo
+        where task_type = #{taskType}
+          and priority = #{priority}
+          and execute_time package com.heima.model.schedule.dtos;
+
+        import lombok.Data;
+
+        import java.io.Serializable;
+
+        @Data
+public class Task implements Serializable {
+
+    /**
+     * 任务id
+     */
+    private Long taskId;
+    /**
+     * 类型
+     */
+        private Integer taskType;
+
+    /**
+     * 优先级
+     */
+        private Integer priority;
+
+    /**
+     * 执行id
+     */
+        private long executeTime;
+
+    /**
+     * task参数
+     */
+        private byte[] parameters;
+
+        } #{future,javaType=java.util.Date}
+    </select>
+
+</mapper>

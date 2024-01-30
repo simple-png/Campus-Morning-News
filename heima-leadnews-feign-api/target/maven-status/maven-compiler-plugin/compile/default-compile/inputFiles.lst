@@ -1,0 +1,4 @@
+C:\Users\admin\IdeaProjects\heima-leadnews\heima-leadnews-feign-api\src\main\java\com\heima\apis\article\config\DefaultFeignConfiguration.java
+C:\Users\admin\IdeaProjects\heima-leadnews\heima-leadnews-feign-api\src\main\java\com\heima\apis\article\IArticleClient.java
+C:\Users\admin\IdeaProjects\heima-leadnews\heima-leadnews-feign-api\src\main\java\com\heima\apis\article\fallback\ArticleClientFallbackFactory.java
+C:\Users\admin\IdeaProjects\heima-leadnews\heima-leadnews-feign-api\src\main\java\com\heima\apis\schedule\IScheduleClient.java
