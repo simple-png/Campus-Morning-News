@@ -4,49 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="604da608-9ffe-4565-807e-d184b0b7fdd0" name="Default Changelist" comment="新增文章同步(在审核成功后同步到es中)">
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/src/main/java/com/heima/search/config/WebMvcConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/src/main/java/com/heima/search/interceptor/AppTokenInterceptor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/src/main/java/com/heima/search/pojos/ApAssociateWords.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/src/main/java/com/heima/search/pojos/ApUserSearch.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/src/main/java/com/heima/search/service/ApUserSearchService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/src/main/java/com/heima/search/service/Impl/ApUserSearchServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-test/mongo-demo/mongo-demo.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-test/mongo-demo/src/main/java/com/itheima/mongo/pojo/ApAssociateWords.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-test/mongo-demo/src/main/resources/application.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-test/mongo-demo/src/test/java/com/itheima/mongo/test/MongoTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-test/mongo-demo/target/classes/application.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-test/mongo-demo/target/classes/com/itheima/mongo/MongoApplication.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-test/mongo-demo/target/classes/com/itheima/mongo/pojo/ApAssociateWords.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-test/mongo-demo/target/test-classes/com/itheima/mongo/test/MongoTest.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-utils/src/main/java/com/heima/utils/thread/ApThreadLocalUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="604da608-9ffe-4565-807e-d184b0b7fdd0" name="Default Changelist" comment="app端保存搜索记录(利用mongodb)">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/src/main/java/com/heima/search/controller/v1/ApUserSearchController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/heima-leadnews-gateway/heima-leadnews-app-gateway/src/main/java/com/heima/app/gateway/filter/AuthorizeFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-gateway/heima-leadnews-app-gateway/src/main/java/com/heima/app/gateway/filter/AuthorizeFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/src/main/java/com/heima/search/SearchApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/src/main/java/com/heima/search/SearchApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/src/main/java/com/heima/search/service/Impl/ArticleSearchServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/src/main/java/com/heima/search/service/Impl/ArticleSearchServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/target/classes/com/heima/search/service/Impl/ArticleSearchServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/target/classes/com/heima/search/service/Impl/ArticleSearchServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-wemedia/src/main/java/com/heima/wemedia/interceptor/WmTokenInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-wemedia/src/main/java/com/heima/wemedia/interceptor/WmTokenInterceptor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/heima-leadnews-test/freemarker-demo/freemarker-demo.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/heima-leadnews-test/freemarker-demo/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-test/mongo-demo/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/heima-leadnews-test/freemarker-demo/src/main/java/com/heima/freeemarker/FreemarkerDemoApplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/heima-leadnews-test/freemarker-demo/src/main/java/com/heima/freeemarker/controller/HelloController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/heima-leadnews-test/freemarker-demo/src/main/java/com/heima/freeemarker/entity/Student.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/heima-leadnews-test/freemarker-demo/src/main/resources/application.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/heima-leadnews-test/freemarker-demo/src/main/resources/templates/01-basic.ftl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/heima-leadnews-test/kafka-demo/kafka-demo.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/heima-leadnews-test/kafka-demo/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/heima-leadnews-test/kafka-demo/src/main/java/com/heima/kafka/KafkaApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-test/mongo-demo/src/main/java/com/itheima/mongo/MongoApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/heima-leadnews-test/kafka-demo/src/main/java/com/heima/kafka/controller/HelloController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/heima-leadnews-test/kafka-demo/src/main/java/com/heima/kafka/listener/HelloListener.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/heima-leadnews-test/kafka-demo/src/main/java/com/heima/kafka/sample/ConsumerQuickStart.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/heima-leadnews-test/kafka-demo/src/main/java/com/heima/kafka/sample/ProducerQuickStart.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/heima-leadnews-test/kafka-demo/src/main/resources/application.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/heima-leadnews-test/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-test/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/heima-leadnews-gateway/heima-leadnews-app-gateway/target/classes/com/heima/app/gateway/filter/AuthorizeFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-gateway/heima-leadnews-app-gateway/target/classes/com/heima/app/gateway/filter/AuthorizeFilter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/src/main/java/com/heima/search/service/ApUserSearchService.java" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/src/main/java/com/heima/search/service/ApUserSearchService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/src/main/java/com/heima/search/service/Impl/ApUserSearchServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/src/main/java/com/heima/search/service/Impl/ApUserSearchServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/target/classes/com/heima/search/SearchApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/target/classes/com/heima/search/SearchApplication.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -422,8 +387,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="Spring Boot.UserApplication" />
-        <item itemvalue="Spring Boot.ArticleApplication" />
         <item itemvalue="Spring Boot.SearchApplication" />
+        <item itemvalue="Spring Boot.ArticleApplication" />
         <item itemvalue="Spring Boot.AppGatewayApplication" />
         <item itemvalue="JUnit.MongoTest.testDel" />
       </list>
@@ -480,7 +445,7 @@
       <workItem from="1707186071583" duration="373000" />
       <workItem from="1707270386683" duration="5617000" />
       <workItem from="1707290786423" duration="19000" />
-      <workItem from="1707290825069" duration="7777000" />
+      <workItem from="1707290825069" duration="10284000" />
     </task>
     <task id="LOCAL-00001" summary="源码">
       <option name="closed" value="true" />
@@ -506,7 +471,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707275066233</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="app端保存搜索记录(利用mongodb)">
+      <option name="closed" value="true" />
+      <created>1707390200170</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1707390200171</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -516,7 +489,8 @@
     <MESSAGE value="源码" />
     <MESSAGE value="添加了search模块" />
     <MESSAGE value="新增文章同步(在审核成功后同步到es中)" />
-    <option name="LAST_COMMIT_MESSAGE" value="新增文章同步(在审核成功后同步到es中)" />
+    <MESSAGE value="app端保存搜索记录(利用mongodb)" />
+    <option name="LAST_COMMIT_MESSAGE" value="app端保存搜索记录(利用mongodb)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
