@@ -11,6 +11,7 @@
     <artifactId>heima-leadnews-test</artifactId>
     <modules>
         <module>es-init</module>
+        <module>mongo-demo</module>
     </modules>
     <packaging>pom</packaging>
     <properties>

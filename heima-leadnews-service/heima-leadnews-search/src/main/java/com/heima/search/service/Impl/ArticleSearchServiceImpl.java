@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.common.enums.AppHttpCodeEnum;
 import com.heima.model.search.dtos.UserSearchDto;
+import com.heima.search.service.ApUserSearchService;
 import com.heima.search.service.ArticleSearchService;
+import com.heima.utils.thread.ApThreadLocalUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.elasticsearch.action.search.SearchRequest;
@@ -30,11 +32,18 @@ import java.util.Map;
 public class ArticleSearchServiceImpl implements ArticleSearchService {
     @Autowired
     private RestHighLevelClient restHighLevelClient;
+    @Autowired
+    private ApUserSearchService apUserSearchService;
+
     @Override
     public ResponseResult search(UserSearchDto dto) throws IOException {
         //检查参数
-        if (dto==null|| StringUtils.isBlank(dto.getSearchWords())){
+        if (dto == null || StringUtils.isBlank(dto.getSearchWords())) {
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
+        }
+        if (ApThreadLocalUtil.getUser() != null && dto.getFromIndex() == 0){
+            //异步调用保存搜索记录
+            apUserSearchService.insert(dto.getSearchWords(), ApThreadLocalUtil.getUser().getId());
         }
         //设置查询条件
         SearchRequest searchRequest = new SearchRequest("app_info_article");
@@ -64,18 +73,18 @@ public class ArticleSearchServiceImpl implements ArticleSearchService {
         SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
 
         //封装返回结构
-        List<Map> list=new ArrayList<>();
+        List<Map> list = new ArrayList<>();
         SearchHit[] hits = searchResponse.getHits().getHits();
         for (SearchHit hit : hits) {
             String sourceAsString = hit.getSourceAsString();
             Map map = JSON.parseObject(sourceAsString, Map.class);
             //处理高亮
-            if (hit.getHighlightFields()!=null&&!hit.getHighlightFields().isEmpty()){
+            if (hit.getHighlightFields() != null && !hit.getHighlightFields().isEmpty()) {
                 Text[] titles = hit.getHighlightFields().get("title").getFragments();
                 String title = StringUtils.join(titles);
-                map.put("h_title",title);
-            }else {
-                map.put("h_title",map.get("title"));
+                map.put("h_title", title);
+            } else {
+                map.put("h_title", map.get("title"));
             }
             list.add(map);
         }

@@ -3,7 +3,6 @@ package com.heima.wemedia.interceptor;
 import com.heima.model.wemedia.pojos.WmUser;
 import com.heima.utils.thread.WmThreadLocalUtil;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,18 +29,17 @@ public class WmTokenInterceptor implements HandlerInterceptor {
         return true;
     }
 
+
     /**
-     * 清理线程中的数据
-     *
+     * 清理线程数据
      * @param request
      * @param response
      * @param handler
-     * @param modelAndView
+     * @param ex
      * @throws Exception
      */
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         WmThreadLocalUtil.clear();
     }
-
 }
