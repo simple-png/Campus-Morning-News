@@ -4,14 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="604da608-9ffe-4565-807e-d184b0b7fdd0" name="Default Changelist" comment="app端保存搜索记录(利用mongodb)">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/src/main/java/com/heima/search/controller/v1/ApUserSearchController.java" afterDir="false" />
+    <list default="true" id="604da608-9ffe-4565-807e-d184b0b7fdd0" name="Default Changelist" comment="app端加载历史搜索记录">
+      <change afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/src/main/java/com/heima/search/controller/v1/ApAssociateWordsController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/src/main/java/com/heima/search/pojos/dtos/HistorySearchDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/src/main/java/com/heima/search/service/ApAssociateWordsService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/src/main/java/com/heima/search/service/Impl/ApAssociateWordsServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/heima-leadnews-gateway/heima-leadnews-app-gateway/target/classes/com/heima/app/gateway/filter/AuthorizeFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-gateway/heima-leadnews-app-gateway/target/classes/com/heima/app/gateway/filter/AuthorizeFilter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/src/main/java/com/heima/search/controller/v1/ApUserSearchController.java" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/src/main/java/com/heima/search/controller/v1/ApUserSearchController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/src/main/java/com/heima/search/service/ApUserSearchService.java" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/src/main/java/com/heima/search/service/ApUserSearchService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/src/main/java/com/heima/search/service/Impl/ApUserSearchServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/src/main/java/com/heima/search/service/Impl/ApUserSearchServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/target/classes/com/heima/search/SearchApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-search/target/classes/com/heima/search/SearchApplication.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,8 +26,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="JUnit5 Test Class" />
-        <option value="Interface" />
         <option value="Enum" />
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -146,7 +147,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.ArticleApplication">
+  <component name="RunManager" selected="JUnit.ApArticleTest.init">
     <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
@@ -191,17 +192,18 @@
       <option name="OPTIONS" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="MongoTest.testDel" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="mongo-demo" />
+    <configuration name="ApArticleTest.init" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="es-init" />
+      <shortenClasspath name="MANIFEST" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.itheima.mongo.test.*" />
+          <option name="PATTERN" value="com.heima.es.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="com.itheima.mongo.test" />
-      <option name="MAIN_CLASS_NAME" value="com.itheima.mongo.test.MongoTest" />
-      <option name="METHOD_NAME" value="testDel" />
+      <option name="PACKAGE_NAME" value="com.heima.es" />
+      <option name="MAIN_CLASS_NAME" value="com.heima.es.ApArticleTest" />
+      <option name="METHOD_NAME" value="init" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -378,7 +380,7 @@
     </configuration>
     <list>
       <item itemvalue="Application.ConsumerQuickStart-2" />
-      <item itemvalue="JUnit.MongoTest.testDel" />
+      <item itemvalue="JUnit.ApArticleTest.init" />
       <item itemvalue="Spring Boot.AppGatewayApplication" />
       <item itemvalue="Spring Boot.ArticleApplication" />
       <item itemvalue="Spring Boot.SearchApplication" />
@@ -390,7 +392,7 @@
         <item itemvalue="Spring Boot.SearchApplication" />
         <item itemvalue="Spring Boot.ArticleApplication" />
         <item itemvalue="Spring Boot.AppGatewayApplication" />
-        <item itemvalue="JUnit.MongoTest.testDel" />
+        <item itemvalue="JUnit.ApArticleTest.init" />
       </list>
     </recent_temporary>
   </component>
@@ -445,7 +447,7 @@
       <workItem from="1707186071583" duration="373000" />
       <workItem from="1707270386683" duration="5617000" />
       <workItem from="1707290786423" duration="19000" />
-      <workItem from="1707290825069" duration="10284000" />
+      <workItem from="1707290825069" duration="17326000" />
     </task>
     <task id="LOCAL-00001" summary="源码">
       <option name="closed" value="true" />
@@ -479,7 +481,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707390200171</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="app端加载历史搜索记录">
+      <option name="closed" value="true" />
+      <created>1707395936999</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1707395936999</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -490,7 +500,8 @@
     <MESSAGE value="添加了search模块" />
     <MESSAGE value="新增文章同步(在审核成功后同步到es中)" />
     <MESSAGE value="app端保存搜索记录(利用mongodb)" />
-    <option name="LAST_COMMIT_MESSAGE" value="app端保存搜索记录(利用mongodb)" />
+    <MESSAGE value="app端加载历史搜索记录" />
+    <option name="LAST_COMMIT_MESSAGE" value="app端加载历史搜索记录" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
