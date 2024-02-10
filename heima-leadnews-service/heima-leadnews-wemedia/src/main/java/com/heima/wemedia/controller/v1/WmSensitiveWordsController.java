@@ -1,6 +1,6 @@
 package com.heima.wemedia.controller.v1;
 
-import com.heima.model.admin.dtos.SensitiveDto;
+import com.heima.model.admin.dtos.SensitivePageDto;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.wemedia.pojos.WmSensitive;
 import com.heima.wemedia.service.WmSensitiveWordsService;
@@ -21,7 +21,7 @@ public class WmSensitiveWordsController {
     }
 
     @PostMapping("/list")
-    public ResponseResult listSensitiveWords(@RequestBody SensitiveDto dto) {
+    public ResponseResult listSensitiveWords(@RequestBody SensitivePageDto dto) {
         return wmSensitiveWordsService.listSensitiveWords(dto);
     }
     @PostMapping("/save")

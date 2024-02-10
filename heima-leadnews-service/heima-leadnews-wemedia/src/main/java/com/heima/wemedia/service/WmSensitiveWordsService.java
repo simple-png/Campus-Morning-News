@@ -2,7 +2,7 @@ package com.heima.wemedia.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.heima.model.common.dtos.ResponseResult;
-import com.heima.model.admin.dtos.SensitiveDto;
+import com.heima.model.admin.dtos.SensitivePageDto;
 import com.heima.model.wemedia.pojos.WmSensitive;
 
 public interface WmSensitiveWordsService extends IService<WmSensitive> {
@@ -11,7 +11,7 @@ public interface WmSensitiveWordsService extends IService<WmSensitive> {
      * @param dto
      * @return
      */
-    public ResponseResult listSensitiveWords(SensitiveDto dto);
+    public ResponseResult listSensitiveWords(SensitivePageDto dto);
 
     /**
      * 根据id删除敏感词

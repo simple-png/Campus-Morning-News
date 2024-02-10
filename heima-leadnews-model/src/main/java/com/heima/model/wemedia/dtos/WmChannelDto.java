@@ -1,9 +1,9 @@
-package com.heima.model.admin.dtos;
+package com.heima.model.wemedia.dtos;
 
 import com.heima.model.common.dtos.PageRequestDto;
 import lombok.Data;
 
 @Data
-public class SensitiveDto extends PageRequestDto {
+public class WmChannelDto extends PageRequestDto {
     private String name;
 }

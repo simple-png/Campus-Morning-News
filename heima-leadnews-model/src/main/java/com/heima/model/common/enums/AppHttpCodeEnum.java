@@ -19,8 +19,8 @@ public enum AppHttpCodeEnum {
     PARAM_INVALID(501, "无效参数"),
     FAIL_DEL_DOCUMENT(501, "文件删除失败"),
     ARTICLE_REQUIRE(501, "文章Id不可缺少"),
-    ARTICLE_PUBLISHED(501,"文章已发布，不能删除"),
-    ARTICLE_NOT_PUBLISHED(501,"当前文章不是发布状态，不能上下架"),
+    ARTICLE_PUBLISHED(501, "文章已发布，不能删除"),
+    ARTICLE_NOT_PUBLISHED(501, "当前文章不是发布状态，不能上下架"),
     PARAM_IMAGE_FORMAT_ERROR(502, "图片格式有误"),
     SERVER_ERROR(503, "服务器内部错误"),
     // 数据错误 1000~2000
@@ -32,7 +32,8 @@ public enum AppHttpCodeEnum {
     NO_OPERATOR_AUTH(3000, "无权限操作"),
     NEED_ADMIND(3001, "需要管理员权限"),
     //自媒体文章错误 3501~3600
-    MATERIAL_REFERENCE_FAIL(3501, "索引引用失效");
+    MATERIAL_REFERENCE_FAIL(3501, "索引引用失效"),
+    CREATED(201, "已存在");
 
 
     int code;
