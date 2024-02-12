@@ -1,13 +1,12 @@
 package com.heima.wemedia.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.heima.model.admin.dtos.ManualReviewPageDto;
+import com.heima.model.admin.dtos.WmNewsManualReviewDto;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.wemedia.dtos.WmNewsDto;
 import com.heima.model.wemedia.dtos.WmNewsPageReqDto;
-import com.heima.model.wemedia.dtos.WmNewsUpDownDto;
 import com.heima.model.wemedia.pojos.WmNews;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 public interface WmNewsService extends IService<WmNews> {
     /**
@@ -45,4 +44,25 @@ public interface WmNewsService extends IService<WmNews> {
      * @return
      */
     public ResponseResult downOrUpArticle(WmNewsDto dto);
+
+    /**
+     * 需要人工审核的文章分页查询
+     * @param dto
+     * @return
+     */
+    public ResponseResult listManualReview(ManualReviewPageDto dto);
+
+    /**
+     * 审核失败
+     * @param dto
+     * @return
+     */
+    public ResponseResult manualReviewFailed(WmNewsManualReviewDto dto);
+
+    /**
+     * 审核成功
+     * @param dto
+     * @return
+     */
+    ResponseResult manualReviewPassed(WmNewsManualReviewDto dto);
 }

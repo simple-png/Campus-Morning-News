@@ -10,6 +10,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.heima.common.constants.WemediaConstants;
 import com.heima.common.constants.WmNewsMessageConstants;
 import com.heima.common.exception.CustomException;
+import com.heima.model.admin.dtos.ManualReviewPageDto;
+import com.heima.model.admin.dtos.WmNewsManualReviewDto;
 import com.heima.model.common.dtos.PageResponseResult;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.common.enums.AppHttpCodeEnum;
@@ -170,14 +172,53 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
         //修改文章enable
         if (dto.getEnable() != null && dto.getEnable() > -1 && dto.getEnable() < 2) {
             update(Wrappers.<WmNews>lambdaUpdate().set(WmNews::getEnable, dto.getEnable()).eq(WmNews::getId, dto.getId()));
-            if (wmNews.getArticleId()!=null){
+            if (wmNews.getArticleId() != null) {
                 //发送消息，通知article修改文章配置
                 Map<String, Object> map = new HashMap<>();
-                map.put("articleId",wmNews.getArticleId());
-                map.put("enable",dto.getEnable());
-                kafkaTemplate.send(WmNewsMessageConstants.WM_NEWS_UP_OR_DOWN_TOPIC,JSON.toJSONString(map));
+                map.put("articleId", wmNews.getArticleId());
+                map.put("enable", dto.getEnable());
+                kafkaTemplate.send(WmNewsMessageConstants.WM_NEWS_UP_OR_DOWN_TOPIC, JSON.toJSONString(map));
             }
         }
+        return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
+    }
+
+    @Override
+    public ResponseResult listManualReview(ManualReviewPageDto dto) {
+        dto.checkParam();
+        IPage page = new Page(dto.getPage(), dto.getSize());
+        LambdaQueryWrapper<WmNews> wmNewsLambdaQueryWrapper = Wrappers.<WmNews>lambdaQuery()
+                .eq(dto.getStatus() != null, WmNews::getStatus, dto.getStatus())
+                .like(StringUtils.isNotBlank(dto.getTitle()), WmNews::getTitle, dto.getTitle());
+        page(page, wmNewsLambdaQueryWrapper);
+        PageResponseResult responseResult = new PageResponseResult(dto.getPage(), dto.getSize(), (int) page.getTotal());
+        responseResult.setData(page.getRecords());
+        return responseResult;
+    }
+
+    @Override
+    public ResponseResult manualReviewFailed(WmNewsManualReviewDto dto) {
+        if (dto.getId() == null) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.ARTICLE_REQUIRE);
+        }
+        WmNews wmNews = new WmNews();
+        wmNews.setId(dto.getId());
+        wmNews.setReason(dto.getMsg());
+        wmNews.setStatus(Status.FAIL.getCode());
+        updateById(wmNews);
+        return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
+    }
+
+    @Override
+    public ResponseResult manualReviewPassed(WmNewsManualReviewDto dto) {
+        if (dto.getId() == null) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.ARTICLE_REQUIRE);
+        }
+        WmNews wmNews = new WmNews();
+        wmNews.setId(dto.getId());
+        wmNews.setReason("审核通过");
+        wmNews.setStatus(Status.ADMIN_SUCCESS.getCode());
+        updateById(wmNews);
         return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
     }
 
