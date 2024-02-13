@@ -24,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -160,5 +161,28 @@ public class ApArticleServiceImpl extends ServiceImpl<ApArticleMapper, ApArticle
             operationBool = true;
         }
         behaviorMap.put(isLike, operationBool);
+    }
+    /**
+     * 每分钟定时将缓存中的喜欢数同步到数据库
+     */
+    @Scheduled(cron = "0 */1 * * * ?")
+    public void reloadCollectionData() {
+        Set<String> keys = cacheService.scan(ApUserConstants.COLLECTION + "*");
+        //截取文章id
+        List<String> articleIdList = new ArrayList<>();
+        for (String key : keys) {
+            String articleId = key.split(":")[1];
+            articleIdList.add(articleId);
+        }
+        //获取文章收藏数更新到数据库
+        for (String articleId : articleIdList) {
+            Set<String> valueList = cacheService.scan(ApUserConstants.COLLECTION + ":" + articleId + "*");
+            long count = valueList.stream().filter(value -> value.equals("0")).count();
+            ApArticle apArticle = new ApArticle();
+            apArticle.setCollection((int) count);
+            apArticle.setId(Long.valueOf(articleId));
+            apArticleMapper.updateById(apArticle);
+        }
+        log.info("将文章喜欢同步到数据库");
     }
 }
