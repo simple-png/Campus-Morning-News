@@ -2,6 +2,7 @@ package com.heima.user.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.heima.model.common.dtos.ResponseResult;
+import com.heima.model.user.dtos.FollowDto;
 import com.heima.model.user.dtos.LoginDto;
 import com.heima.model.user.pojos.ApUser;
 
@@ -12,4 +13,11 @@ public interface ApUserService extends IService<ApUser> {
      * @return
      */
     public ResponseResult login(LoginDto dto);
+
+    /**
+     * 用户关注与取消关注
+     * @param dto
+     * @return
+     */
+    ResponseResult userFollow(FollowDto dto);
 }

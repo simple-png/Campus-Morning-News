@@ -2,15 +2,20 @@ package com.heima.user.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.heima.common.constants.ApUserConstants;
+import com.heima.common.redis.CacheService;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.common.enums.AppHttpCodeEnum;
+import com.heima.model.user.dtos.FollowDto;
 import com.heima.model.user.dtos.LoginDto;
 import com.heima.model.user.pojos.ApUser;
 import com.heima.user.mapper.ApUserMapper;
 import com.heima.user.service.ApUserService;
 import com.heima.utils.common.AppJwtUtil;
+import com.heima.utils.thread.ApThreadLocalUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
@@ -64,6 +69,24 @@ public class ApUserServiceImpl extends ServiceImpl<ApUserMapper, ApUser> impleme
         }
 
 
+    }
+
+    @Autowired
+    private CacheService cacheService;
+
+    @Override
+    public ResponseResult userFollow(FollowDto dto) {
+        if (dto.getAuthorId()==null||dto.getOperation()==null||dto.getArticleId()==null){
+            return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
+        }
+        Integer userId = ApThreadLocalUtil.getUser().getId();
+        //user_behavior_collection:文章id:用户id:作者id
+        String key = ApUserConstants.FOLLOW + ":" +
+                dto.getArticleId() + ":" +
+                userId + ":" +
+                dto.getAuthorId() + ":";
+        cacheService.set(key, String.valueOf(dto.getOperation()));
+        return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
     }
 
 }

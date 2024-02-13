@@ -8,6 +8,6 @@ public class ApUserConstants {
     //点赞行为
     public static final String LIKES = "user_behavior_likes";
     public static final String UNLIKE = "user_behavior_unlikes";
-    public static final String IS_COLLECTION = "collection_";
+    public static final String FOLLOW = "user_behavior_follow";
 
 }
