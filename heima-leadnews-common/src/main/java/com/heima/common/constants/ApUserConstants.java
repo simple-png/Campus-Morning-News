@@ -9,5 +9,6 @@ public class ApUserConstants {
     public static final String LIKES = "user_behavior_likes";
     public static final String UNLIKE = "user_behavior_unlikes";
     public static final String FOLLOW = "user_behavior_follow";
+    public static final String COLLECTION = "user_behavior_collection";
 
 }

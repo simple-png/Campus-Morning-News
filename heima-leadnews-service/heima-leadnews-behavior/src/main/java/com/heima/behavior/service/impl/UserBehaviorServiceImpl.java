@@ -64,7 +64,7 @@ public class UserBehaviorServiceImpl implements UserBehaviorService {
         stringBuffer.append(behavior).append(":")
                 .append(articleId).append(":")
                 .append(userId).append(":")
-                .append(type).append(":");
+                .append(type);
         return stringBuffer.toString();
     }
 

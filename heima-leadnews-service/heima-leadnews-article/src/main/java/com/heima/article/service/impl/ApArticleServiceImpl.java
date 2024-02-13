@@ -7,7 +7,11 @@ import com.heima.article.mapper.ApArticleContentMapper;
 import com.heima.article.mapper.ApArticleMapper;
 import com.heima.article.service.ApArticleService;
 import com.heima.article.service.ArticleFreemarkerService;
+import com.heima.common.constants.ApUserConstants;
 import com.heima.common.constants.ArticleConstants;
+import com.heima.common.redis.CacheService;
+import com.heima.model.article.dtos.ArticleBehaviorDto;
+import com.heima.model.article.dtos.ArticleCollectionDto;
 import com.heima.model.article.dtos.ArticleDto;
 import com.heima.model.article.dtos.ArticleHomeDto;
 import com.heima.model.article.pojos.ApArticle;
@@ -15,6 +19,7 @@ import com.heima.model.article.pojos.ApArticleConfig;
 import com.heima.model.article.pojos.ApArticleContent;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.common.enums.AppHttpCodeEnum;
+import com.heima.utils.thread.ApThreadLocalUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -22,8 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Transactional
@@ -105,5 +109,56 @@ public class ApArticleServiceImpl extends ServiceImpl<ApArticleMapper, ApArticle
         //异步调用 生成静态文件上传到minio中
         articleFreemarkerService.buildArticleToMinio(apArticle, dto.getContent());
         return ResponseResult.okResult(apArticle.getId());
+    }
+
+    @Autowired
+    private CacheService cacheService;
+
+    @Override
+    public ResponseResult behaviorCollection(ArticleCollectionDto dto) {
+        if (dto.getOperation() == null || dto.getType() == null || dto.getEntryId() == null || dto.getPublishedTime() == null) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
+        }
+        Integer userId = ApThreadLocalUtil.getUser().getId();
+        String key = ApUserConstants.COLLECTION + ":"
+                + dto.getEntryId() + ":"
+                + userId + ":"
+                + dto.getType();
+        cacheService.set(key, String.valueOf(dto.getOperation()));
+        return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
+    }
+
+    @Override
+    public ResponseResult loadArticleBehavior(ArticleBehaviorDto dto) {
+        Integer userId = ApThreadLocalUtil.getUser().getId();
+        Map<String, Boolean> behaviorMap = new HashMap<>();
+        //获取是否喜欢||不喜欢||收藏
+        putBehavior(dto.getArticleId(), userId, behaviorMap, "islike");
+        putBehavior(dto.getArticleId(), userId, behaviorMap, "isunlike");
+        putBehavior(dto.getArticleId(), userId, behaviorMap, "iscollection");
+        String followKey = ApUserConstants.FOLLOW + ":" +
+                dto.getArticleId() + ":" +
+                userId + ":" +
+                dto.getAuthorId();
+        String isFollow = cacheService.get(followKey);
+        boolean isFollowBool = false;
+        if (isFollow != null && isFollow.equals("0")) {
+            isFollowBool = true;
+        }
+        behaviorMap.put("isfollow", isFollowBool);
+        return ResponseResult.okResult(behaviorMap);
+    }
+
+    private void putBehavior(Long articleId, Integer userId, Map<String, Boolean> behaviorMap, String isLike) {
+        String likeKey = ApUserConstants.LIKES + ":"
+                + articleId + ":"
+                + userId + ":"
+                + 0;
+        String value = cacheService.get(likeKey);
+        boolean operationBool = false;
+        if (value != null && value.equals("0")) {
+            operationBool = true;
+        }
+        behaviorMap.put(isLike, operationBool);
     }
 }

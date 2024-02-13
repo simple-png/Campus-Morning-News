@@ -84,7 +84,7 @@ public class ApUserServiceImpl extends ServiceImpl<ApUserMapper, ApUser> impleme
         String key = ApUserConstants.FOLLOW + ":" +
                 dto.getArticleId() + ":" +
                 userId + ":" +
-                dto.getAuthorId() + ":";
+                dto.getAuthorId();
         cacheService.set(key, String.valueOf(dto.getOperation()));
         return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
     }
