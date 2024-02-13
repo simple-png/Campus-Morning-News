@@ -85,9 +85,10 @@ public class UserBehaviorServiceImpl implements UserBehaviorService {
         }
         //获取文章喜欢数更新到数据库
         for (String articleId : articleIdList) {
-            Set<String> scan = cacheService.scan(ApUserConstants.LIKES + ":" + articleId + "*");
+            Set<String> valueList = cacheService.scan(ApUserConstants.LIKES + ":" + articleId + "*");
+            long count = valueList.stream().filter(value -> value.equals("0")).count();
             ApArticle apArticle = new ApArticle();
-            apArticle.setLikes(scan.size());
+            apArticle.setLikes((int) count);
             apArticle.setId(Long.valueOf(articleId));
             apArticleMapper.updateById(apArticle);
         }
