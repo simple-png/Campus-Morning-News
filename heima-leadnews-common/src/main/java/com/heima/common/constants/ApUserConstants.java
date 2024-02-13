@@ -1,6 +1,13 @@
 package com.heima.common.constants;
 
 public class ApUserConstants {
+    //审核失败
     public static final int AUDIT_FAILED = 2;
+    //审核成功
     public static final int AUDIT_PASSED = 9;
+    //点赞行为
+    public static final String LIKES = "user_behavior_likes";
+    public static final String UNLIKE = "user_behavior_unlikes";
+    public static final String IS_COLLECTION = "collection_";
+
 }
