@@ -1,5 +1,6 @@
 package com.heima.article.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.heima.article.mapper.ApArticleConfigMapper;
@@ -17,6 +18,7 @@ import com.heima.model.article.dtos.ArticleHomeDto;
 import com.heima.model.article.pojos.ApArticle;
 import com.heima.model.article.pojos.ApArticleConfig;
 import com.heima.model.article.pojos.ApArticleContent;
+import com.heima.model.article.vos.HotArticleVo;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.common.enums.AppHttpCodeEnum;
 import com.heima.utils.thread.ApThreadLocalUtil;
@@ -36,10 +38,20 @@ import java.util.*;
 public class ApArticleServiceImpl extends ServiceImpl<ApArticleMapper, ApArticle> implements ApArticleService {
     @Autowired
     private ApArticleMapper apArticleMapper;
+
+    @Autowired
+    private CacheService cacheService;
     private static final short MAX_PAGE_SIZE = 50;
 
     @Override
     public ResponseResult load(ArticleHomeDto dto, Short type) {
+        if (type.equals(ArticleConstants.LOADTYPE_LOAD_TOP)) {
+            String jsonString = cacheService.get(ArticleConstants.HOT_ARTICLE_FIRST_PAGE + dto.getTag());
+            if (StringUtils.isNotBlank(jsonString)) {
+                List<HotArticleVo> hotArticleVos = JSON.parseArray(jsonString, HotArticleVo.class);
+                return ResponseResult.okResult(hotArticleVos);
+            }
+        }
         //分页条数的校验
         Integer size = dto.getSize();
         if (size == null || size == 0) {
@@ -112,9 +124,6 @@ public class ApArticleServiceImpl extends ServiceImpl<ApArticleMapper, ApArticle
         return ResponseResult.okResult(apArticle.getId());
     }
 
-    @Autowired
-    private CacheService cacheService;
-
     @Override
     public ResponseResult behaviorCollection(ArticleCollectionDto dto) {
         if (dto.getOperation() == null || dto.getType() == null || dto.getEntryId() == null || dto.getPublishedTime() == null) {
@@ -162,6 +171,7 @@ public class ApArticleServiceImpl extends ServiceImpl<ApArticleMapper, ApArticle
         }
         behaviorMap.put(isLike, operationBool);
     }
+
     /**
      * 每分钟定时将缓存中的喜欢数同步到数据库
      */

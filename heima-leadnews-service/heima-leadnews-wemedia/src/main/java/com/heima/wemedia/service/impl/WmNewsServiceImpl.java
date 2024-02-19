@@ -141,7 +141,7 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
             return ResponseResult.errorResult(AppHttpCodeEnum.ARTICLE_NOT_EXIST);
         }
         //检查是否已发布
-        if (wmNews.getEnable() == 1) {
+        if (wmNews.getEnable() == 1 && wmNews.getStatus() == 9) {
             return ResponseResult.errorResult(AppHttpCodeEnum.ARTICLE_PUBLISHED);
         }
         //删除文章

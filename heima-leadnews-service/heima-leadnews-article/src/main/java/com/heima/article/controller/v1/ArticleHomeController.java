@@ -25,7 +25,7 @@ public class ArticleHomeController {
      */
     @PostMapping("/load")
     public ResponseResult load(@RequestBody ArticleHomeDto articleHomeDto){
-        return apArticleService.load(articleHomeDto, ArticleConstants.LOADTYPE_LOAD_MORE);
+        return apArticleService.load(articleHomeDto, ArticleConstants.LOADTYPE_LOAD_TOP);
     }
 
     /**
