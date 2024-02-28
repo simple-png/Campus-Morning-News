@@ -12,6 +12,7 @@
     <modules>
         <module>es-init</module>
         <module>mongo-demo</module>
+        <module>kafka-demo</module>
     </modules>
     <packaging>pom</packaging>
     <properties>

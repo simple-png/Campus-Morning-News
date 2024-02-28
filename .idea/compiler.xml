@@ -16,6 +16,7 @@
         <module name="heima-leadnews-user" />
         <module name="heima-leadnews-admin-gateway" />
         <module name="heima-leadnews-admin" />
+        <module name="kafka-demo" />
         <module name="es-init" />
         <module name="heima-leadnews-schedule" />
         <module name="heima-leadnews-utils" />
@@ -28,7 +29,6 @@
     </annotationProcessing>
     <bytecodeTargetLevel target="8">
       <module name="freemarker-demo" target="1.8" />
-      <module name="kafka-demo" target="1.8" />
       <module name="xxljob-demo" target="1.8" />
     </bytecodeTargetLevel>
   </component>
