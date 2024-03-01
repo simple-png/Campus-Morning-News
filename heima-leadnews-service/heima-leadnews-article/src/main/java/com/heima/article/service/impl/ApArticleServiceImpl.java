@@ -10,6 +10,7 @@ import com.heima.article.service.ApArticleService;
 import com.heima.article.service.ArticleFreemarkerService;
 import com.heima.common.constants.ApUserConstants;
 import com.heima.common.constants.ArticleConstants;
+import com.heima.common.constants.HotArticleConstants;
 import com.heima.common.redis.CacheService;
 import com.heima.model.article.dtos.ArticleBehaviorDto;
 import com.heima.model.article.dtos.ArticleCollectionDto;
@@ -21,16 +22,20 @@ import com.heima.model.article.pojos.ApArticleContent;
 import com.heima.model.article.vos.HotArticleVo;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.common.enums.AppHttpCodeEnum;
+import com.heima.model.mess.ArticleVisitStreamMess;
+import com.heima.model.mess.UpdateArticleMess;
+import com.heima.model.mess.UpdateArticleMess.UpdateArticleType;
 import com.heima.utils.thread.ApThreadLocalUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -124,75 +129,172 @@ public class ApArticleServiceImpl extends ServiceImpl<ApArticleMapper, ApArticle
         return ResponseResult.okResult(apArticle.getId());
     }
 
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
+
     @Override
     public ResponseResult behaviorCollection(ArticleCollectionDto dto) {
-        if (dto.getOperation() == null || dto.getType() == null || dto.getEntryId() == null || dto.getPublishedTime() == null) {
+        if (dto.getEntryId() == null || dto.getOperation() == null || dto.getType() == null) {
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
         }
         Integer userId = ApThreadLocalUtil.getUser().getId();
-        String key = ApUserConstants.COLLECTION + ":"
-                + dto.getEntryId() + ":"
-                + userId + ":"
-                + dto.getType();
-        cacheService.set(key, String.valueOf(dto.getOperation()));
+
+        UpdateArticleMess mess = new UpdateArticleMess();
+        mess.setArticleId(dto.getEntryId());
+        mess.setType(UpdateArticleType.COLLECTION);
+
+        String userCollectionKey = ApUserConstants.COLLECTION + dto.getEntryId();
+        if (dto.getOperation().equals((short) 0)) {
+            //如果没有收藏
+            if (!cacheService.sIsMember(userCollectionKey, userId.toString())) {
+                //收藏
+                cacheService.sAdd(userCollectionKey, userId.toString());
+                mess.setAdd(1);
+            } else {
+                return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID, "已经收藏过");
+            }
+        } else if (dto.getOperation().equals((short) 1)) {
+            if (cacheService.sIsMember(userCollectionKey, userId.toString())) {
+                //取消收藏
+                cacheService.sRemove(userCollectionKey, userId.toString());
+                mess.setAdd(-1);
+            } else {
+                return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID, "未收藏");
+            }
+        }
+        kafkaTemplate.send(HotArticleConstants.HOT_ARTICLE_SCORE_TOPIC, JSON.toJSONString(mess));
         return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
     }
 
+
     @Override
     public ResponseResult loadArticleBehavior(ArticleBehaviorDto dto) {
-        Integer userId = ApThreadLocalUtil.getUser().getId();
-        Map<String, Boolean> behaviorMap = new HashMap<>();
-        //获取是否喜欢||不喜欢||收藏
-        putBehavior(dto.getArticleId(), userId, behaviorMap, "islike");
-        putBehavior(dto.getArticleId(), userId, behaviorMap, "isunlike");
-        putBehavior(dto.getArticleId(), userId, behaviorMap, "iscollection");
-        String followKey = ApUserConstants.FOLLOW + ":" +
-                dto.getArticleId() + ":" +
-                userId + ":" +
-                dto.getAuthorId();
-        String isFollow = cacheService.get(followKey);
-        boolean isFollowBool = false;
-        if (isFollow != null && isFollow.equals("0")) {
-            isFollowBool = true;
+        if (dto.getArticleId() == null || dto.getAuthorId() == null) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
         }
-        behaviorMap.put("isfollow", isFollowBool);
+        String userId = ApThreadLocalUtil.getUser().getId().toString();
+        Map<String, Boolean> behaviorMap = new HashMap<>();
+        //是否关注
+        Object follow = cacheService.hGet(ApUserConstants.FOLLOW, userId);
+        if (follow instanceof String && StringUtils.isNotBlank((String) follow) && follow.equals(dto.getAuthorId().toString())) {
+            behaviorMap.put("isfollow", true);
+        } else {
+            behaviorMap.put("isfollow", false);
+        }
+        //是否不喜欢
+        if (cacheService.sIsMember(ApUserConstants.UNLIKE + dto.getArticleId(), userId)) {
+            behaviorMap.put("isunlike", true);
+        } else {
+            behaviorMap.put("isunlike", false);
+        }
+        //是否喜欢
+        if (cacheService.sIsMember(ApUserConstants.LIKES + dto.getArticleId(), userId)) {
+            behaviorMap.put("islike", true);
+        } else {
+            behaviorMap.put("islike", false);
+        }
+        //是否收藏
+        if (cacheService.sIsMember(ApUserConstants.COLLECTION + dto.getArticleId(), userId)) {
+            behaviorMap.put("iscollection", true);
+        } else {
+            behaviorMap.put("iscollection", false);
+        }
         return ResponseResult.okResult(behaviorMap);
     }
 
-    private void putBehavior(Long articleId, Integer userId, Map<String, Boolean> behaviorMap, String isLike) {
-        String likeKey = ApUserConstants.LIKES + ":"
-                + articleId + ":"
-                + userId + ":"
-                + 0;
-        String value = cacheService.get(likeKey);
-        boolean operationBool = false;
-        if (value != null && value.equals("0")) {
-            operationBool = true;
-        }
-        behaviorMap.put(isLike, operationBool);
+    @Override
+    public void updateScore(ArticleVisitStreamMess mess) {
+        //更新文章的阅读点赞收藏评论数量
+        ApArticle article = updateArticle(mess);
+        //计算文章的分值
+        Integer score = computeScore(article);
+        score *= 3;
+        //替换当前文章对应的热点数据
+        String key = ArticleConstants.HOT_ARTICLE_FIRST_PAGE + article.getChannelId();
+        String articleListStr = cacheService.get(key);
+
+        replaceDataToRedis(article, score, key, articleListStr);
+
+        key = ArticleConstants.HOT_ARTICLE_FIRST_PAGE + ArticleConstants.DEFAULT_TAG;
+        articleListStr = cacheService.get(key);
+        replaceDataToRedis(article, score, key, articleListStr);
     }
 
     /**
-     * 每分钟定时将缓存中的喜欢数同步到数据库
+     * 替换数据并且存入redis中
+     *
+     * @param article
+     * @param score
+     * @param key
+     * @param articleListStr
      */
-    @Scheduled(cron = "0 */1 * * * ?")
-    public void reloadCollectionData() {
-        Set<String> keys = cacheService.scan(ApUserConstants.COLLECTION + "*");
-        //截取文章id
-        List<String> articleIdList = new ArrayList<>();
-        for (String key : keys) {
-            String articleId = key.split(":")[1];
-            articleIdList.add(articleId);
+    private void replaceDataToRedis(ApArticle article, Integer score, String key, String articleListStr) {
+        boolean isReplace = true;
+        if (StringUtils.isNotBlank(articleListStr)) {
+            List<HotArticleVo> hotArticleVos = JSON.parseArray(articleListStr, HotArticleVo.class);
+            //如果缓存存在该文章，只更新分值
+            for (HotArticleVo hotArticleVo : hotArticleVos) {
+                if (hotArticleVo.getId().equals(article.getId())) {
+                    hotArticleVo.setScore(score);
+                    isReplace = false;
+                    break;
+                }
+            }
+            if (isReplace) {
+                //文章热点数据大于30 找到最小的文章进行替换
+                if (hotArticleVos.size() >= 30) {
+                    // 找到分数最小的文章
+                    HotArticleVo minScoreArticle = hotArticleVos.get(0);
+                    for (HotArticleVo hotArticleVo : hotArticleVos) {
+                        if (minScoreArticle.getScore() < hotArticleVo.getScore()) {
+                            minScoreArticle = hotArticleVo;
+                        }
+                    }
+                    if (minScoreArticle.getScore() < score) {
+                        hotArticleVos.remove(minScoreArticle);
+                        HotArticleVo hotArticleVo = new HotArticleVo();
+                        BeanUtils.copyProperties(article, hotArticleVo);
+                        hotArticleVo.setScore(score);
+                        hotArticleVos.add(hotArticleVo);
+                    }
+                }
+                //直接添加新数据
+                else {
+                    HotArticleVo hotArticleVo = new HotArticleVo();
+                    BeanUtils.copyProperties(article, hotArticleVo);
+                    hotArticleVo.setScore(score);
+                    hotArticleVos.add(hotArticleVo);
+                }
+            }
+            hotArticleVos = hotArticleVos.stream().sorted(Comparator.comparing(HotArticleVo::getScore)).collect(Collectors.toList());
+            cacheService.set(key, JSON.toJSONString(hotArticleVos));
         }
-        //获取文章收藏数更新到数据库
-        for (String articleId : articleIdList) {
-            Set<String> valueList = cacheService.scan(ApUserConstants.COLLECTION + ":" + articleId + "*");
-            long count = valueList.stream().filter(value -> value.equals("0")).count();
-            ApArticle apArticle = new ApArticle();
-            apArticle.setCollection((int) count);
-            apArticle.setId(Long.valueOf(articleId));
-            apArticleMapper.updateById(apArticle);
+    }
+
+    private Integer computeScore(ApArticle apArticle) {
+        int score = 0;
+        if (apArticle.getLikes() != null) {
+            score += apArticle.getLikes() * ArticleConstants.HOT_ARTICLE_LIKE_WEIGHT;
         }
-        log.info("将文章喜欢同步到数据库");
+        if (apArticle.getCollection() != null) {
+            score += apArticle.getCollection() * ArticleConstants.HOT_ARTICLE_COLLECTION_WEIGHT;
+        }
+        if (apArticle.getComment() != null) {
+            score += apArticle.getComment() * ArticleConstants.HOT_ARTICLE_COMMENT_WEIGHT;
+        }
+        if (apArticle.getViews() != null) {
+            score += apArticle.getViews();
+        }
+        return score;
+    }
+
+    private ApArticle updateArticle(ArticleVisitStreamMess mess) {
+        ApArticle apArticle = getById(mess.getArticleId());
+        apArticle.setCollection(apArticle.getCollection() == null ? mess.getCollect() : apArticle.getCollection() + mess.getCollect());
+        apArticle.setLikes(apArticle.getLikes() == null ? mess.getLike() : apArticle.getLikes() + mess.getLike());
+        apArticle.setViews(apArticle.getViews() == null ? mess.getView() : apArticle.getViews() + mess.getView());
+        apArticle.setComment(apArticle.getComment() == null ? mess.getComment() : apArticle.getComment() + mess.getComment());
+        updateById(apArticle);
+        return apArticle;
     }
 }

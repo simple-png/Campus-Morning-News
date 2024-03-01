@@ -16,16 +16,23 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserBehaviorController {
     @Autowired
     private UserBehaviorService userBehaviorService;
+
     @PostMapping("/likes_behavior")
-    public ResponseResult behaviorLikes(@RequestBody BehaviorLikeDto dto){
-       return userBehaviorService.behaviorLikes(dto);
+    public ResponseResult behaviorLikes(@RequestBody BehaviorLikeDto dto) {
+        return userBehaviorService.behaviorLikes(dto);
     }
+
     @PostMapping("/un_likes_behavior")
-    public ResponseResult behaviorUnLikes(@RequestBody BehaviorUnLikeDto dto){
-        return userBehaviorService.behaviorUnLikes(dto);
+    public ResponseResult behaviorUnLikes(@RequestBody BehaviorUnLikeDto dto) {
+        //不喜欢
+        BehaviorLikeDto behaviorLikeDto = new BehaviorLikeDto();
+        behaviorLikeDto.setArticleId(dto.getArticleId());
+        behaviorLikeDto.setOperation((short) 2);
+        return userBehaviorService.behaviorLikes(behaviorLikeDto);
     }
+
     @PostMapping("/read_behavior")
-    public ResponseResult behaviorRead(@RequestBody BehaviorReadDto dto){
+    public ResponseResult behaviorRead(@RequestBody BehaviorReadDto dto) {
         return userBehaviorService.behaviorRead(dto);
     }
 }

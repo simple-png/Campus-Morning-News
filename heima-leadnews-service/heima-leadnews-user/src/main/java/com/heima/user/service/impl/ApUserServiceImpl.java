@@ -76,16 +76,12 @@ public class ApUserServiceImpl extends ServiceImpl<ApUserMapper, ApUser> impleme
 
     @Override
     public ResponseResult userFollow(FollowDto dto) {
-        if (dto.getAuthorId()==null||dto.getOperation()==null||dto.getArticleId()==null){
+        if (dto.getArticleId() == null || dto.getOperation() == null || dto.getAuthorId() == null) {
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
         }
         Integer userId = ApThreadLocalUtil.getUser().getId();
-        //user_behavior_collection:文章id:用户id:作者id
-        String key = ApUserConstants.FOLLOW + ":" +
-                dto.getArticleId() + ":" +
-                userId + ":" +
-                dto.getAuthorId();
-        cacheService.set(key, String.valueOf(dto.getOperation()));
+
+        cacheService.hPut(ApUserConstants.FOLLOW, userId.toString(), dto.getAuthorId().toString());
         return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
     }
 

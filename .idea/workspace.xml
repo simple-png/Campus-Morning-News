@@ -4,32 +4,27 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="604da608-9ffe-4565-807e-d184b0b7fdd0" name="Default Changelist" comment="定时缓存五天的文章">
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-test/kafka-demo/kafka-demo.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-test/kafka-demo/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-test/kafka-demo/src/main/java/com/heima/kafka/KafkaDemoApplication.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-test/kafka-demo/src/main/java/com/heima/kafka/config/KafkaStreamConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-test/kafka-demo/src/main/java/com/heima/kafka/controller/HelloController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-test/kafka-demo/src/main/java/com/heima/kafka/listener/HelloListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-test/kafka-demo/src/main/java/com/heima/kafka/pojo/User.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-test/kafka-demo/src/main/java/com/heima/kafka/sample/ConsumerQuickStart.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-test/kafka-demo/src/main/java/com/heima/kafka/sample/KafkaStreamQuickStart.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-test/kafka-demo/src/main/java/com/heima/kafka/sample/ProducerQuickStart.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-test/kafka-demo/src/main/java/com/heima/kafka/stream/KafkaStreamHelloListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-test/kafka-demo/src/main/resources/application.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-test/kafka-demo/target/classes/application.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-test/kafka-demo/target/classes/com/heima/kafka/KafkaDemoApplication.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-test/kafka-demo/target/classes/com/heima/kafka/config/KafkaStreamConfig.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-test/kafka-demo/target/classes/com/heima/kafka/controller/HelloController.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-test/kafka-demo/target/classes/com/heima/kafka/listener/HelloListener.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-test/kafka-demo/target/classes/com/heima/kafka/pojo/User.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-test/kafka-demo/target/classes/com/heima/kafka/sample/ConsumerQuickStart.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-test/kafka-demo/target/classes/com/heima/kafka/sample/KafkaStreamQuickStart.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-test/kafka-demo/target/classes/com/heima/kafka/sample/ProducerQuickStart.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heima-leadnews-test/kafka-demo/target/classes/com/heima/kafka/stream/KafkaStreamHelloListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+    <list default="true" id="604da608-9ffe-4565-807e-d184b0b7fdd0" name="Default Changelist" comment="kafka测试类">
+      <change afterPath="$PROJECT_DIR$/heima-leadnews-common/src/main/java/com/heima/common/constants/HotArticleConstants.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/heima-leadnews-model/src/main/java/com/heima/model/mess/ArticleVisitStreamMess.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/heima-leadnews-model/src/main/java/com/heima/model/mess/UpdateArticleMess.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-article/src/main/java/com/heima/article/config/KafkaStreamConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-article/src/main/java/com/heima/article/listener/ArticleIncrHandleListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-article/src/main/java/com/heima/article/stream/HotArticleStreamHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/heima-leadnews-test/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-test/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/heima-leadnews-common/src/main/java/com/heima/common/constants/ApUserConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-common/src/main/java/com/heima/common/constants/ApUserConstants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/heima-leadnews-common/src/main/java/com/heima/common/constants/ArticleConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-common/src/main/java/com/heima/common/constants/ArticleConstants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/heima-leadnews-common/target/classes/com/heima/common/constants/ArticleConstants.class" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-common/target/classes/com/heima/common/constants/ArticleConstants.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-article/src/main/java/com/heima/article/service/ApArticleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-article/src/main/java/com/heima/article/service/ApArticleService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-article/src/main/java/com/heima/article/service/impl/ApArticleServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-article/src/main/java/com/heima/article/service/impl/ApArticleServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-article/src/test/java/com/heima/article/service/impl/HotArticleServiceImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-article/src/test/java/com/heima/article/service/impl/HotArticleServiceImplTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-article/target/classes/com/heima/article/service/ApArticleService.class" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-article/target/classes/com/heima/article/service/ApArticleService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-article/target/classes/com/heima/article/service/impl/ApArticleServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-article/target/classes/com/heima/article/service/impl/ApArticleServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-behavior/src/main/java/com/heima/behavior/controller/UserBehaviorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-behavior/src/main/java/com/heima/behavior/controller/UserBehaviorController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-behavior/src/main/java/com/heima/behavior/service/UserBehaviorService.java" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-behavior/src/main/java/com/heima/behavior/service/UserBehaviorService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-behavior/src/main/java/com/heima/behavior/service/impl/UserBehaviorServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-behavior/src/main/java/com/heima/behavior/service/impl/UserBehaviorServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-user/src/main/java/com/heima/user/service/impl/ApUserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-user/src/main/java/com/heima/user/service/impl/ApUserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-user/target/classes/com/heima/user/service/impl/ApUserServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-user/target/classes/com/heima/user/service/impl/ApUserServiceImpl.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -158,11 +153,11 @@
       <recent name="com.heima.wemedia.service" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.heima.behavior.config" />
       <recent name="com.heima.article.config" />
       <recent name="com.heima.model.behavior.dtos" />
       <recent name="com.heima.model.admin.dtos" />
       <recent name="com.heima.user.mapper" />
-      <recent name="com.heima.admin.gateway" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -172,7 +167,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Application.ProducerQuickStart">
+  <component name="RunManager" selected="Spring Boot.BehaviorApplication">
     <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
@@ -243,6 +238,13 @@
       <option name="OPTIONS" value="" />
       <method v="2" />
     </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <shortenClasspath name="MANIFEST" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="JetRunConfigurationType">
       <module name="heima-leadnews-model" />
       <method v="2">
@@ -304,13 +306,13 @@
       <option name="launchJavascriptDebuger" value="false" />
       <method v="2" />
     </configuration>
-    <configuration name="UserApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
-      <module name="heima-leadnews-user" />
+    <configuration name="BehaviorApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <module name="heima-leadnews-behavior" />
       <option name="SHORTEN_COMMAND_LINE" value="MANIFEST" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.heima.user.UserApplication" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.heima.behavior.BehaviorApplication" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.heima.user.*" />
+          <option name="PATTERN" value="com.heima.behavior.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -318,13 +320,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="WemediaApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
-      <module name="heima-leadnews-wemedia" />
+    <configuration name="UserApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <module name="heima-leadnews-user" />
       <option name="SHORTEN_COMMAND_LINE" value="MANIFEST" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.heima.wemedia.WemediaApplication" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.heima.user.UserApplication" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.heima.wemedia.*" />
+          <option name="PATTERN" value="com.heima.user.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -388,16 +390,16 @@
       <item itemvalue="Application.ConsumerQuickStart" />
       <item itemvalue="Application.KafkaStreamQuickStart" />
       <item itemvalue="Application.ProducerQuickStart" />
-      <item itemvalue="Spring Boot.WemediaApplication" />
+      <item itemvalue="Spring Boot.BehaviorApplication" />
       <item itemvalue="Spring Boot.UserApplication" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.ProducerQuickStart" />
-        <item itemvalue="Application.ConsumerQuickStart" />
-        <item itemvalue="Application.KafkaStreamQuickStart" />
+        <item itemvalue="Spring Boot.BehaviorApplication" />
         <item itemvalue="Spring Boot.UserApplication" />
-        <item itemvalue="Spring Boot.WemediaApplication" />
+        <item itemvalue="Application.ProducerQuickStart" />
+        <item itemvalue="Application.KafkaStreamQuickStart" />
+        <item itemvalue="Application.ConsumerQuickStart" />
       </list>
     </recent_temporary>
   </component>
@@ -459,7 +461,7 @@
       <workItem from="1708683030028" duration="891000" />
       <workItem from="1708943150815" duration="641000" />
       <workItem from="1708943802100" duration="8287000" />
-      <workItem from="1709088876665" duration="1786000" />
+      <workItem from="1709088876665" duration="46936000" />
     </task>
     <task id="LOCAL-00001" summary="源码">
       <option name="closed" value="true" />
@@ -605,7 +607,15 @@
       <option name="project" value="LOCAL" />
       <updated>1708345149904</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="kafka测试类">
+      <option name="closed" value="true" />
+      <created>1709106407501</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1709106407501</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -629,7 +639,8 @@
     <MESSAGE value="修复错误同步likes的bug" />
     <MESSAGE value="同步缓存中的收藏数到数据库" />
     <MESSAGE value="定时缓存五天的文章" />
-    <option name="LAST_COMMIT_MESSAGE" value="定时缓存五天的文章" />
+    <MESSAGE value="kafka测试类" />
+    <option name="LAST_COMMIT_MESSAGE" value="kafka测试类" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

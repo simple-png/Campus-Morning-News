@@ -5,7 +5,7 @@ public class ArticleConstants {
     public static final Short LOADTYPE_LOAD_NEW = 2;
     public static final Short LOADTYPE_LOAD_TOP = 3;
 
-    public static final String READ = "article_read:";
+    public static final String READ = "article_read";
     public static final String DEFAULT_TAG = "__all__";
     public static final String ARTICLE_ES_SYNC_TOPIC = "article.es.sync.topic";
 
@@ -14,5 +14,6 @@ public class ArticleConstants {
     public static final Integer HOT_ARTICLE_COLLECTION_WEIGHT = 8;
 
     public static final String HOT_ARTICLE_FIRST_PAGE = "hot_article_first_page_";
+    public static final String LIKES_COUNT = "user_behavior_likes_count";
 
 }
