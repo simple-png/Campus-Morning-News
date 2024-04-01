@@ -43,7 +43,7 @@
       <module name="heima-leadnews-app-gateway" options="-parameters" />
       <module name="heima-leadnews-article" options="-parameters" />
       <module name="heima-leadnews-basic" options="-parameters" />
-      <module name="heima-leadnews-behavior" options="" />
+      <module name="heima-leadnews-behavior" options="-parameters" />
       <module name="heima-leadnews-common" options="-parameters" />
       <module name="heima-leadnews-feign-api" options="-parameters" />
       <module name="heima-leadnews-gateway" options="-parameters" />
@@ -56,7 +56,7 @@
       <module name="heima-leadnews-utils" options="-parameters" />
       <module name="heima-leadnews-wemedia" options="-parameters" />
       <module name="heima-leadnews-wemedia-gateway" options="-parameters" />
-      <module name="kafka-demo" options="" />
+      <module name="kafka-demo" options="-parameters" />
       <module name="mongo-demo" options="-parameters" />
       <module name="xxljob-demo" options="-parameters" />
     </option>
