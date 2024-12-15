@@ -1,13 +1,16 @@
 package com.heima.file.service.impl;
 
 
+import com.heima.file.config.CustomMinioClient;
 import com.heima.file.config.MinIOConfig;
 import com.heima.file.config.MinIOConfigProperties;
 import com.heima.file.service.FileStorageService;
-import io.minio.GetObjectArgs;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
-import io.minio.RemoveObjectArgs;
+import com.heima.model.wemedia.vos.WmFileVo;
+import com.heima.model.wemedia.vos.WmFileVo.Item;
+import io.minio.*;
+import io.minio.errors.*;
+import io.minio.http.Method;
+import io.minio.messages.Part;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -17,8 +20,14 @@ import org.springframework.util.StringUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @EnableConfigurationProperties(MinIOConfigProperties.class)
@@ -26,7 +35,7 @@ import java.util.Date;
 public class MinIOFileStorageService implements FileStorageService {
 
     @Autowired
-    private MinioClient minioClient;
+    private CustomMinioClient minioClient;
 
     @Autowired
     private MinIOConfigProperties minIOConfigProperties;
@@ -48,6 +57,62 @@ public class MinIOFileStorageService implements FileStorageService {
         stringBuilder.append(todayStr).append(separator);
         stringBuilder.append(filename);
         return stringBuilder.toString();
+    }
+
+    @Override
+    public WmFileVo initFile(String filename, Integer chunkSize) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+        String bucketName = minIOConfigProperties.getBucket();
+        boolean exists = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
+        if (!exists) {
+            log.info("create bucket: [{}]", bucketName);
+            minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+        } else {
+            log.info("bucket '{}' already exists.", bucketName);
+        }
+        String uploadId = minioClient.initMultiPartUpload(bucketName, null, filename, null, null);
+        HashMap<String, String> reqParams = new HashMap<String, String>() {{
+            put("uploadId", uploadId);
+        }};
+        LinkedList<WmFileVo.Item> partList = new LinkedList<>();
+        for (int i = 1; i <= chunkSize; i++) {
+            reqParams.put("partNumber", String.valueOf(i));
+            String uploadUrl = minioClient.getPresignedObjectUrl(
+                    GetPresignedObjectUrlArgs.builder()
+                            .method(Method.PUT)
+                            .bucket(bucketName)
+                            .object(filename)
+                            .expiry(1, TimeUnit.DAYS)
+                            .extraQueryParams(reqParams)
+                            .build());
+            partList.add(new Item(uploadUrl, i));
+        }
+        WmFileVo wmFileVo = new WmFileVo();
+        wmFileVo.setPartList(partList);
+        wmFileVo.setUpdateId(uploadId);
+        return wmFileVo;
+    }
+
+    @Override
+    public void mergeFile(String filename, String uploadId) throws ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, IOException, InvalidKeyException, XmlParserException, InvalidResponseException, InternalException {
+        ListPartsResponse listPartsResponse = minioClient.listMultipart(
+                minIOConfigProperties.getBucket(),
+                null,
+                filename,
+                null,
+                0,
+                uploadId,
+                null,
+                null);
+        List<Part> parts = listPartsResponse.result().partList();
+        minioClient.mergeMultipartUpload(
+                minIOConfigProperties.getBucket(),
+                null,
+                filename,
+                uploadId,
+                parts.toArray(new Part[]{}),
+                null,
+                null
+                );
     }
 
     /**

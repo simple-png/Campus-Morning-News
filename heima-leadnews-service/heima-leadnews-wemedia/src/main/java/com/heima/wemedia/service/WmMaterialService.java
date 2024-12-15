@@ -2,11 +2,17 @@ package com.heima.wemedia.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.heima.model.common.dtos.ResponseResult;
+import com.heima.model.wemedia.dtos.WmFileChunkDto;
+import com.heima.model.wemedia.dtos.WmFileDto;
 import com.heima.model.wemedia.dtos.WmMaterialDto;
 import com.heima.model.wemedia.pojos.WmMaterial;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import io.minio.errors.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 public interface WmMaterialService extends IService<WmMaterial> {
 
@@ -44,4 +50,10 @@ public interface WmMaterialService extends IService<WmMaterial> {
      * @return
      */
     public ResponseResult cancelCollectPicture(Integer id);
+
+    public ResponseResult initFile(WmFileDto wmFileDto) throws Exception;
+
+    public ResponseResult uploadFileChunk(WmFileChunkDto dto) throws InvocationTargetException, IllegalAccessException;
+
+    public ResponseResult mergeFileChunk(String uploadId) throws ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, IOException, InvalidKeyException, XmlParserException, InvalidResponseException, InternalException;
 }

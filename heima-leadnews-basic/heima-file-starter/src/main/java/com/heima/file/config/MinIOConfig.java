@@ -21,11 +21,12 @@ public class MinIOConfig {
     private MinIOConfigProperties minIOConfigProperties;
 
     @Bean
-    public MinioClient buildMinioClient() {
-        return MinioClient
+    public CustomMinioClient buildMinioClient() {
+        MinioClient minioClient = MinioClient
                 .builder()
                 .credentials(minIOConfigProperties.getAccessKey(), minIOConfigProperties.getSecretKey())
                 .endpoint(minIOConfigProperties.getEndpoint())
                 .build();
+        return new CustomMinioClient(minioClient);
     }
 }

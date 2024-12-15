@@ -6,27 +6,43 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.heima.common.constants.WemediaConstants;
+import com.heima.common.constants.WmMaterialConstants;
+import com.heima.common.redis.CacheService;
 import com.heima.file.service.FileStorageService;
 import com.heima.model.common.dtos.PageResponseResult;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.common.enums.AppHttpCodeEnum;
+import com.heima.model.wemedia.dtos.WmFileChunkDto;
+import com.heima.model.wemedia.dtos.WmFileDto;
 import com.heima.model.wemedia.dtos.WmMaterialDto;
+import com.heima.model.wemedia.pojos.WmFile;
+import com.heima.model.wemedia.pojos.WmFileChunk;
 import com.heima.model.wemedia.pojos.WmMaterial;
 import com.heima.model.wemedia.pojos.WmNewsMaterial;
+import com.heima.model.wemedia.vos.WmFileVo;
+import com.heima.model.wemedia.vos.WmFileVo.Item;
 import com.heima.utils.thread.WmThreadLocalUtil;
+import com.heima.wemedia.mapper.WmFileChunkMapper;
+import com.heima.wemedia.mapper.WmFileMapper;
 import com.heima.wemedia.mapper.WmMaterialMapper;
 import com.heima.wemedia.mapper.WmNewsMaterialMapper;
 import com.heima.wemedia.service.WmMaterialService;
+import io.minio.errors.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -38,6 +54,12 @@ public class WmMaterialServiceImpl extends ServiceImpl<WmMaterialMapper, WmMater
     private FileStorageService fileStorageService;
     @Autowired
     private WmNewsMaterialMapper wmNewsMaterialMapper;
+    @Autowired
+    private WmFileMapper wmFileMapper;
+    @Autowired
+    private WmFileChunkMapper wmFileChunkMapper;
+    @Autowired
+    private CacheService cacheService;
 
     @Override
     public ResponseResult uploadPicture(MultipartFile multipartFile) {
@@ -133,6 +155,104 @@ public class WmMaterialServiceImpl extends ServiceImpl<WmMaterialMapper, WmMater
         material.setIsCollection(isCollect);
         //保存
         updateById(material);
+        return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
+    }
+
+    @Override
+    public ResponseResult initFile(WmFileDto wmFileDto) throws Exception {
+        // 1. 检查 Redis 缓存
+        Boolean isExistsFile = cacheService.sIsMember(WmMaterialConstants.FILES, wmFileDto.getFileMd5());
+        if (isExistsFile) {
+            // 2. 如果缓存中存在，则处理已有文件逻辑
+            return handleExistingFile(wmFileDto);
+        } else {
+            // 3. 如果缓存中不存在，则处理新文件的初始化逻辑
+            return handleNewFile(wmFileDto);
+        }
+    }
+
+    private ResponseResult handleExistingFile(WmFileDto wmFileDto) {
+        WmFile wmFile = wmFileMapper.selectOne(Wrappers.<WmFile>lambdaQuery().eq(WmFile::getFileMd5, wmFileDto.getFileMd5()));
+        if (wmFile == null) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST);
+        }
+
+        // 文件已经上传完成
+        if (wmFile.getStatus().equals(WmMaterialConstants.FINISHED)) {
+            return ResponseResult.okResult(wmFile);
+        }
+
+        // 查询未完成的分片
+        List<WmFileChunk> wmFileChunks = wmFileChunkMapper.selectList(Wrappers.<WmFileChunk>lambdaQuery()
+                .eq(WmFileChunk::getUploadId, wmFile.getUploadId())
+                .ne(WmFileChunk::getStatus, WmMaterialConstants.FINISHED));
+
+        // 构建返回数据
+        LinkedList<Item> items = wmFileChunks.stream().map(chunk -> {
+            Item item = new Item();
+            item.setUrl(chunk.getUrl());
+            item.setChunkIndex(chunk.getChunkIndex());
+            return item;
+        }).collect(Collectors.toCollection(LinkedList::new));
+
+        WmFileVo wmFileVo = new WmFileVo();
+        wmFileVo.setUpdateId(wmFile.getUploadId());
+        wmFileVo.setPartList(items);
+
+        return ResponseResult.okResult(wmFileVo);
+    }
+
+    private ResponseResult handleNewFile(WmFileDto wmFileDto) throws Exception {
+        // 生成文件唯一标识
+        String minioFileName = UUID.randomUUID().toString().replace("-", "");
+
+        // 初始化 MinIO 文件
+        WmFileVo wmFileVo = fileStorageService.initFile(minioFileName, wmFileDto.getChunkSize());
+
+        // 保存文件记录到数据库
+        WmFile wmFile = new WmFile();
+        BeanUtils.copyProperties(wmFileDto, wmFile);
+        wmFile.setFileUuid(minioFileName);
+        wmFile.setUploadId(wmFileVo.getUpdateId());
+        wmFile.setStatus(WmMaterialConstants.UPLOADING);
+        wmFile.setCreatedTime(new Date());
+        wmFile.setUpdateTime(new Date());
+        wmFileMapper.insert(wmFile);
+
+        // 保存分片记录到数据库
+        saveFileChunks(wmFileVo.getPartList(), wmFileVo.getUpdateId());
+
+        return ResponseResult.okResult(wmFileVo);
+    }
+
+    private void saveFileChunks(List<Item> partList, String uploadId) {
+        partList.forEach(item -> {
+            WmFileChunk fileChunk = new WmFileChunk();
+            fileChunk.setUrl(item.getUrl());
+            fileChunk.setUploadId(uploadId);
+            fileChunk.setChunkIndex(item.getChunkIndex());
+            fileChunk.setStatus(WmMaterialConstants.UPLOADING);
+            fileChunk.setCreatedTime(new Date());
+            fileChunk.setUpdateTime(new Date());
+            wmFileChunkMapper.insert(fileChunk);
+        });
+    }
+
+    @Override
+    public ResponseResult uploadFileChunk(WmFileChunkDto dto) {
+        WmFileChunk fileChunk = wmFileChunkMapper.selectOne(Wrappers.<WmFileChunk>lambdaQuery()
+                .eq(WmFileChunk::getUploadId, dto.getUploadId())
+                .eq(WmFileChunk::getChunkIndex, dto.getChunkIndex()));
+        BeanUtils.copyProperties(dto, fileChunk);
+        fileChunk.setStatus(WmMaterialConstants.FINISHED);
+        wmFileChunkMapper.updateById(fileChunk);
+        return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
+    }
+
+    @Override
+    public ResponseResult mergeFileChunk(String uploadId) throws ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, IOException, InvalidKeyException, XmlParserException, InvalidResponseException, InternalException {
+        WmFile file = wmFileMapper.selectOne(Wrappers.<WmFile>lambdaQuery().eq(WmFile::getUploadId, uploadId));
+        fileStorageService.mergeFile(file.getFileUuid(), uploadId);
         return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
     }
 }
